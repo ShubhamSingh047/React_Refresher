@@ -119,14 +119,28 @@ const p1 = Promise.reject('Error From Promise One');
 const p2 = Promise.resolve(200);
 const p3 = Promise.resolve('Finished');
 
-Promise.all([p1,p2,p3])
-.then((resolve)=>console.log(resolve))
-.catch((reject)=>console.log(reject));
+// Promise.all([p1,p2,p3])
+// .then((resolve)=>console.log(resolve))
+// .catch((reject)=>console.log(reject));
 
 /*
 Here come Promise.AllSettled() it will give us an object of all rejected and resolved promised
 */
+// Promise.allSettled([p1,p2,p3])
+// .then((resolved)=>console.log(resolved))
+// .catch((error)=>console.log(error));
 
-Promise.allSettled([p1,p2,p3])
-.then((resolved)=>console.log(resolved))
+/* 
+--------- Promise.any()----------- 
+1). Return first resolve return;
+*/
+
+// Promise.any([p1,p2,p3])
+// .then((resolve)=>console.log(resolve))
+// .catch((error)=>console.log(error));
+
+/* ----------Promise.race()----- */
+
+Promise.race([p1,p2,p3])
+.then((resolve)=>console.log(resolve))
 .catch((error)=>console.log(error));
