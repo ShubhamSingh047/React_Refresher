@@ -25,13 +25,13 @@ console.log(...rest);
 
 
 /*----------- Ddestructuring Object-----------*/
-
 const user = {
     firstName: 'Jack',
     lastName: 'Smith',
   };
   
 const { firstName, lastName } = user;
+
 
 /* Destructuring using function */
 function myFunction() {
