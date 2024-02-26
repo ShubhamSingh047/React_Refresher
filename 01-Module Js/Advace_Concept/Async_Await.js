@@ -49,5 +49,4 @@ const asyFun = async () => {
     console.log(error);
   }
 };
-
 asyFun();
