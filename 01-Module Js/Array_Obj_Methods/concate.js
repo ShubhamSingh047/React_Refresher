@@ -2,8 +2,8 @@
 We will lern about concate v/s push;
 */
 
-const arr1=[1,2,3,4];
-const arr2=[5,6,7,8];
+const arr1 = [1, 2, 3, 4];
+const arr2 = [5, 6, 7, 8];
 
 /*                       >>------Push-------<<
     push will push the complet array into arr1 and will change the arr1
@@ -16,6 +16,15 @@ const arr2=[5,6,7,8];
     concate will add every element from arr1 and arr2 and return a new arr
     ---Very imp it will not update any existing arr but will return a new array
 */
-const test=arr1.concat(arr2);
-console.log(arr1)
+console.log("Using Concate method");
+const test = arr1.concat(arr2);
+console.log(arr1);
 console.log(test);
+
+/*                     >>-----Spread Operator-------<<
+  we can do the owrk of ocncate using Spread operator
+*/
+
+console.log("Using Spread Operator");
+const spreaTest = [...arr1, ...arr2];
+console.log(spreaTest);
