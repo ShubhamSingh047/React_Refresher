@@ -1,17 +1,43 @@
+import PropTypes from "prop-types";
 import { useState } from "react";
 
-const initialItems = [
-  { id: 1, description: "Passports", quantity: 2, packed: false },
-  { id: 2, description: "Socks", quantity: 12, packed: false },
-];
-
 function App() {
+  const [item, setItems] = useState([]);
+
+  const handleItems = (item) => {
+    setItems((oldItems) => [...oldItems, item]);
+  };
+
+  const handleDeletItem = (key) => {
+    setItems((items) => items.filter((item) => item.id != key));
+  };
+
+  const handleChecked = (id) => {
+    setItems((items) =>
+      items.map((item) =>
+        item.id == id ? { ...item, packed: !item.packed } : item
+      )
+    );
+  };
+
+  const handleCleared = () => {
+    const confirm = window.confirm(
+      `are your sure you want to delet all items ?!`
+    );
+    if (confirm) setItems([]);
+  };
+
   return (
     <>
       <Logo />
-      <Form />
-      <PackingList />
-      <Stats />
+      <Form onAddItems={handleItems} />
+      <PackingList
+        items={item}
+        onDelete={handleDeletItem}
+        onChecked={handleChecked}
+        onCleared={handleCleared}
+      />
+      <Stats items={item} />
     </>
   );
 }
@@ -20,14 +46,14 @@ function Logo() {
   return <h1>🌴 Far Away 🌊 </h1>;
 }
 
-function Form() {
+function Form({ onAddItems }) {
   const [description, setDesription] = useState("");
   const [quantity, setQuantity] = useState(1);
 
   const submitHandler = (e) => {
     e.preventDefault();
     const newItem = { id: Date.now(), description, quantity, packed: false };
-    console.log(newItem);
+    onAddItems(newItem);
     setDesription("");
     setQuantity(1);
   };
@@ -56,33 +82,101 @@ function Form() {
   );
 }
 
-function PackingList() {
+Form.propTypes = {
+  onAddItems: PropTypes.func.isRequired,
+};
+
+function PackingList({ items, onDelete, onChecked, onCleared }) {
+  const [sorted, setSorted] = useState("input");
+
+  let sortedItem;
+
+  if (sorted === "input") sortedItem = items;
+  if (sorted === "description") {
+    sortedItem = items
+      .slice()
+      .sort((a, b) => a.description.localeCompare(b.description));
+  }
+  if (sorted === "packed") {
+    sortedItem = items.sort((a, b) => Number(a.packed) - Number(b.packed));
+  }
+
+  const handleSort = (e) => {
+    setSorted(e);
+  };
+
   return (
-    <ul className="list">
-      {initialItems.map((item) => (
-        <Item item={item} key={item.id} />
-      ))}
-    </ul>
+    <div className="list">
+      <ul>
+        {sortedItem.map((item) => (
+          <Item
+            onDelete={onDelete}
+            item={item}
+            key={item.id}
+            onChecked={onChecked}
+          />
+        ))}
+      </ul>
+      <div className="actions">
+        <select value={sorted} onChange={(e) => handleSort(e.target.value)}>
+          <option value="input">sort by input</option>
+          <option value="description">sort by description</option>
+          <option value="packed">sort by packed</option>
+        </select>
+        <button onClick={onCleared}>clear</button>
+      </div>
+    </div>
   );
 }
 
-function Item({ item }) {
+PackingList.propTypes = {
+  items: PropTypes.array.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onChecked: PropTypes.func.isRequired,
+  onCleared: PropTypes.func.isRequired,
+};
+
+function Item({ item, onDelete, onChecked }) {
   return (
     <li>
+      <input
+        type="checkbox"
+        value={item.packed}
+        onChange={() => onChecked(item.id)}
+      />
       <span style={item.packed ? { textDecoration: "line-through" } : {}}>
         {item.quantity} {item.description}
       </span>
-      <button>❌</button>
+
+      <button onClick={() => onDelete(item.id)}>❌</button>
     </li>
   );
 }
 
-function Stats() {
+Item.propTypes = {
+  item: PropTypes.object.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onChecked: PropTypes.func.isRequired,
+};
+
+function Stats({ items }) {
+  const totalItem = items.length;
+  const packedItem = items.filter((item) => item.packed).length;
+  const percentage = Math.round(packedItem / totalItem) * 100 || 0;
+  console.log(percentage);
+
   return (
     <footer className="stats">
-      <em>You have X items on your list and you have already packed X(X%)</em>
+      <em>
+        {`You have ${totalItem} items on your list and you have already packed 
+        ${packedItem} (${percentage}%)`}
+      </em>
     </footer>
   );
 }
+
+Stats.propTypes = {
+  items: PropTypes.array.isRequired,
+};
 
 export default App;
