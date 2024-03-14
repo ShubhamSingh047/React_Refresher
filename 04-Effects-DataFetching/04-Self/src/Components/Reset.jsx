@@ -5,3 +5,13 @@ const Reset = ({ setCounts }) => {
 };
 
 export default Reset;
+
+
+
+const Test = () => {
+  return (
+    <div>Reset</div>
+  )
+}
+
+export default Test
