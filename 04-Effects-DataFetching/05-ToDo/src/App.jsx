@@ -1,13 +1,10 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 
 function App() {
   const [List, setList] = useState([]);
   const [value, setValue] = useState("");
   const [sortBy, setSorted] = useState("ByEntry");
-  console.log(List, "list value");
 
   const handleValue = () => {
     value && setList([...List, value]);
