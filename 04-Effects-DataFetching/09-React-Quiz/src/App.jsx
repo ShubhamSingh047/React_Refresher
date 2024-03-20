@@ -16,7 +16,15 @@ const reducer = (state, action) => {
     case "error":
       return { ...state, status: "error" };
     case "newAnswer":
-      return { ...state, answer: action.payLoad };
+      const question = state.question.at(state.index);
+      return {
+        ...state,
+        answer: action.payLoad,
+        points:
+          action.payLoad === question.correctOption
+            ? state.points + question.points
+            : state.points,
+      };
     default:
       throw new Error("Action unknown");
   }
@@ -27,10 +35,11 @@ const intialState = {
   status: "loading",
   index: 0,
   answer: null,
+  points: 0,
 };
 
 function App() {
-  const [{ question, status, index, answer }, dispatch] = useReducer(
+  const [{ question, status, index, answer, points }, dispatch] = useReducer(
     reducer,
     intialState
   );
@@ -68,6 +77,7 @@ function App() {
             questions={question[index]}
             dispatch={dispatch}
             answer={answer}
+            points={points}
           />
         )}
       </Body>
