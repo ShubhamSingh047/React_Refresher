@@ -6,6 +6,7 @@ import Loader from "./components/Loader";
 import Error from "./components/Error";
 import QuizStart from "./components/QuizStart";
 import Questions from "./components/Questions";
+import NextButton from "./components/NextButton";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -25,6 +26,8 @@ const reducer = (state, action) => {
             ? state.points + question.points
             : state.points,
       };
+    case "nextQuestion":
+      return { ...state, index: state.index + 1, answer: null };
     default:
       throw new Error("Action unknown");
   }
@@ -80,6 +83,7 @@ function App() {
             points={points}
           />
         )}
+        <NextButton dispatch={dispatch} answer={answer} />
       </Body>
     </div>
   );

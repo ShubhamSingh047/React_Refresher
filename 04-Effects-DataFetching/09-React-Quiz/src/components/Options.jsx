@@ -6,7 +6,8 @@ const Options = ({ questions, dispatch, answer }) => {
           <button
             className={`btn btn-option ${index === answer && "answer"} ${
               answer && index === questions.correctOption ? "correct" : "wrong"
-            }`}
+            }
+            `}
             key={data}
             onClick={() => dispatch({ type: "newAnswer", payLoad: index })}
             disabled={answer}

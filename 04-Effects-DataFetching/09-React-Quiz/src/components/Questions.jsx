@@ -11,6 +11,7 @@ const Questions = ({ questions, dispatch, answer, points }) => {
         answer={answer}
         points={points}
       />
+      
     </div>
   );
 };
