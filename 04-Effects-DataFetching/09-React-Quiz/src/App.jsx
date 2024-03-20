@@ -7,6 +7,8 @@ import Error from "./components/Error";
 import QuizStart from "./components/QuizStart";
 import Questions from "./components/Questions";
 import NextButton from "./components/NextButton";
+import Progress from "./components/Progress";
+import FinishScreen from "./components/FinishScreen";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -28,6 +30,8 @@ const reducer = (state, action) => {
       };
     case "nextQuestion":
       return { ...state, index: state.index + 1, answer: null };
+    case "finish":
+      return { ...state, status: "finished" };
     default:
       throw new Error("Action unknown");
   }
@@ -46,6 +50,9 @@ function App() {
     reducer,
     intialState
   );
+
+  const maxPoints = question.reduce((prev, curr) => prev + curr.points, 0);
+
   useEffect(() => {
     const api = async () => {
       try {
@@ -76,14 +83,31 @@ function App() {
           <QuizStart Length={question.length} dispatch={dispatch} />
         )}
         {status === "active" && (
-          <Questions
-            questions={question[index]}
-            dispatch={dispatch}
-            answer={answer}
-            points={points}
-          />
+          <>
+            <Progress
+              index={index}
+              numQuestions={question.length}
+              points={points}
+              answer={answer}
+              maxPossiblePoints={maxPoints}
+            />
+            <Questions
+              questions={question[index]}
+              dispatch={dispatch}
+              answer={answer}
+              points={points}
+            />
+            <NextButton
+              dispatch={dispatch}
+              answer={answer}
+              numQuestions={question.length}
+              index={index}
+            />
+          </>
         )}
-        <NextButton dispatch={dispatch} answer={answer} />
+        {status === "finished" && (
+          <FinishScreen maxPossiblePoints={maxPoints} points={points} />
+        )}
       </Body>
     </div>
   );

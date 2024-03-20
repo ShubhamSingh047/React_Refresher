@@ -5,7 +5,11 @@ const Options = ({ questions, dispatch, answer }) => {
         questions.options.map((data, index) => (
           <button
             className={`btn btn-option ${index === answer && "answer"} ${
-              answer && index === questions.correctOption ? "correct" : "wrong"
+              answer !== null
+                ? index === questions.correctOption
+                  ? "correct"
+                  : "wrong"
+                : ""
             }
             `}
             key={data}

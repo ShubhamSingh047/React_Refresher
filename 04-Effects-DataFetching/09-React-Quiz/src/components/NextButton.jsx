@@ -1,8 +1,9 @@
 import React from "react";
 
-const NextButton = ({ dispatch, answer }) => {
-  return (
-    answer && (
+const NextButton = ({ dispatch, answer, numQuestions, index }) => {
+  if (answer === null) return;
+  if (index < numQuestions - 1) {
+    return (
       <div>
         <button
           className="btn btn-ui"
@@ -11,8 +12,19 @@ const NextButton = ({ dispatch, answer }) => {
           Next
         </button>
       </div>
-    )
-  );
+    );
+  }
+  if (index >= numQuestions - 1) {
+    return (
+      <div>
+        <button
+          className="btn btn-ui"
+          onClick={() => dispatch({ type: "finish" })}
+        >
+          Finished
+        </button>
+      </div>
+    );
+  }
 };
-
 export default NextButton;
