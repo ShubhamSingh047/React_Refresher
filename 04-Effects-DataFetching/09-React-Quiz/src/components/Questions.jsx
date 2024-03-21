@@ -1,7 +1,6 @@
 import Options from "./Options";
 
 const Questions = ({ questions, dispatch, answer, points }) => {
-  console.log(questions);
   return (
     <div>
       <h4>{questions.question}</h4>
@@ -11,7 +10,6 @@ const Questions = ({ questions, dispatch, answer, points }) => {
         answer={answer}
         points={points}
       />
-      
     </div>
   );
 };
