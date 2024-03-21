@@ -133,14 +133,19 @@ Here come Promise.AllSettled() it will give us an object of all rejected and res
 /* 
 --------- Promise.any()----------- 
 1). Return first resolve return;
+2). They are all rejected, in which case it's rejected with an AggregateError.
+
 */
 
 // Promise.any([p1,p2,p3])
 // .then((resolve)=>console.log(resolve))
 // .catch((error)=>console.log(error));
 
-/* ----------Promise.race()----- */
-
+/* 
+----------Promise.race()-------
+1). Promise gets resolved based of first outcome.
+2). What ever promise gets complet first irrespective of (resolve/reject) it will give that promise.
+*/
 Promise.race([p1,p2,p3])
 .then((resolve)=>console.log(resolve))
 .catch((error)=>console.log(error));
