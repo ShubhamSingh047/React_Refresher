@@ -9,8 +9,10 @@ import Questions from "./components/Questions";
 import NextButton from "./components/NextButton";
 import Progress from "./components/Progress";
 import FinishScreen from "./components/FinishScreen";
-import Restart from "./components/Restart";
+import Footer from "./components/Footer";
+import Timer from "./components/Timer";
 
+const secPerQus = 30;
 const intialState = {
   question: [],
   status: "loading",
@@ -18,6 +20,7 @@ const intialState = {
   answer: null,
   points: 0,
   highScore: 0,
+  timeRemaining: null,
 };
 
 const reducer = (state, action) => {
@@ -25,7 +28,11 @@ const reducer = (state, action) => {
     case "dataRecived":
       return { ...state, question: action.payLoad, status: "ready" };
     case "active":
-      return { ...state, status: "active" };
+      return {
+        ...state,
+        status: "active",
+        timeRemaining: state.question.length * secPerQus,
+      };
     case "error":
       return { ...state, status: "error" };
     case "newAnswer":
@@ -49,12 +56,18 @@ const reducer = (state, action) => {
       };
     case "restart":
       return {
-        ...state,
+        ...intialState,
         status: "ready",
-        index: 0,
-        answer: null,
-        points: 0,
-        highScore: 0,
+        question: state.question,
+      };
+    case "timer":
+      return {
+        ...state,
+        timeRemaining:
+          state.timeRemaining > 0
+            ? state.timeRemaining - 1
+            : state.timeRemaining,
+        status: state.timeRemaining === 0 ? "finished" : state.status,
       };
     default:
       throw new Error("Action unknown");
@@ -62,8 +75,10 @@ const reducer = (state, action) => {
 };
 
 function App() {
-  const [{ question, status, index, answer, points, highScore }, dispatch] =
-    useReducer(reducer, intialState);
+  const [
+    { question, status, index, answer, points, highScore, timeRemaining },
+    dispatch,
+  ] = useReducer(reducer, intialState);
 
   const maxPoints = question.reduce((prev, curr) => prev + curr.points, 0);
 
@@ -117,17 +132,18 @@ function App() {
               numQuestions={question.length}
               index={index}
             />
+            <Footer>
+              <Timer dispatch={dispatch} timeRemaining={timeRemaining} />
+            </Footer>
           </>
         )}
         {status === "finished" && (
-          <>
-            <FinishScreen
-              maxPossiblePoints={maxPoints}
-              points={points}
-              highScore={highScore}
-            />
-            <Restart dispatch={dispatch} />
-          </>
+          <FinishScreen
+            maxPossiblePoints={maxPoints}
+            points={points}
+            highScore={highScore}
+            dispatch={dispatch}
+          />
         )}
       </Body>
     </div>
